@@ -5,8 +5,8 @@ from config import PORT
 
 
 class Server:
-    def __init__(self, host, port=PORT):
-        self._HOST = host
+    def __init__(self, port=PORT):
+        self._HOST = socket.gethostbyname(socket.gethostname())
         self._PORT = port
         self.start_server()
 
@@ -33,4 +33,4 @@ class Server:
 
 
 if __name__ == "__main__":
-    server = Server(host='127.0.0.1')
+    server = Server()

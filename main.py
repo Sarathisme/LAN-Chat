@@ -6,7 +6,7 @@ from server import Server
 
 
 def create_server(port=PORT):
-    Server(host='127.0.0.1', port=port)
+    Server(port=port)
 
 
 def create_client(port=PORT):

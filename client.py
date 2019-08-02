@@ -19,7 +19,6 @@ class Client:
     def start_chat(self):
         while True:
             self._END = False
-            self.clear_screen()
 
             print("Your device details: ", socket.gethostbyname(socket.gethostname()), socket.gethostname(), "\n")
             self._HOST = input("Enter ip address: ")
@@ -37,6 +36,7 @@ class Client:
     def connect_to_server(self):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                print(self._HOST, self._PORT)
                 s.connect((self._HOST, self._PORT))
                 print("Connected to ", self._HOST, self._PORT)
 
@@ -47,13 +47,10 @@ class Client:
                         print(data.decode())
 
         except ConnectionRefusedError as ce:
-            print("\nDevice not active or not running the chat server\n")
+            print("\nDevice not active or not running the chat server\n", ce)
 
         except Exception as e:
             print(e)
-
-        finally:
-            self.start_chat()
 
 
 if __name__ == "__main__":
