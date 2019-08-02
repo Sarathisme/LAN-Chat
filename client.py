@@ -19,19 +19,24 @@ class Client:
 
     def start_chat(self):
         while True:
+            self._END = False
+            self.clear_screen()
+
             scan = input("Scan devices? ")
+
             if scan == 'bye' or scan == 'BYE' or scan == -1:
                 return
             elif 'y' in scan or 'Y' in scan or scan == 1:
-                self.clear_screen()
                 hosts = Mapper().get_addresses()
-                self._END = False
-                self._HOST = self.get_selected_host(hosts)
-                if self._HOST != -1:
-                    self.connect_to_server()
+                self._HOST = self.get_selected_host(hosts=hosts)
+            else:
+                self._HOST = input("Enter ip address: ")
+
+            if self._HOST != -1:
+                self.connect_to_server()
 
     @staticmethod
-    def get_selected_host(hosts):
+    def get_selected_host(hosts=None):
         try:
             for index in range(0, len(sorted(set(hosts)))):
                 print(str(index + 1) + '. ', hosts[index])
@@ -39,7 +44,8 @@ class Client:
             print("Your device details: ", socket.gethostbyname(socket.gethostname()), socket.gethostname(), "\n")
 
             return hosts[int(input('Enter the host number you want to connect to: ')) - 1]
-        except IndexError as e:
+
+        except IndexError as _:
             print("No active devices")
             return -1
 
@@ -54,6 +60,7 @@ class Client:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((self._HOST, self._PORT))
+                print("Connected to ", self._HOST, self._PORT)
 
                 threading.Thread(target=self.send_message, args=(s,)).start()
                 while not self._END:
