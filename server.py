@@ -21,7 +21,7 @@ class Server:
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((self._HOST, self._PORT))
             s.listen(5)
-            print("\nServer initialized...")
+            print("\nServer initialized...", self._PORT)
             conn, addr = s.accept()
             with conn:
                 print("Connected by: ", addr)

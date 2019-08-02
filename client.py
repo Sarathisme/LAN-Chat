@@ -3,7 +3,6 @@ import socket
 import threading
 
 from config import PORT
-from devices import Mapper
 
 
 class Client:
@@ -22,32 +21,11 @@ class Client:
             self._END = False
             self.clear_screen()
 
-            scan = input("Scan devices? ")
-
-            if scan == 'bye' or scan == 'BYE' or scan == -1:
-                return
-            elif 'y' in scan or 'Y' in scan or scan == 1:
-                hosts = Mapper().get_addresses()
-                self._HOST = self.get_selected_host(hosts=hosts)
-            else:
-                self._HOST = input("Enter ip address: ")
+            print("Your device details: ", socket.gethostbyname(socket.gethostname()), socket.gethostname(), "\n")
+            self._HOST = input("Enter ip address: ")
 
             if self._HOST != -1:
                 self.connect_to_server()
-
-    @staticmethod
-    def get_selected_host(hosts=None):
-        try:
-            for index in range(0, len(sorted(set(hosts)))):
-                print(str(index + 1) + '. ', hosts[index])
-
-            print("Your device details: ", socket.gethostbyname(socket.gethostname()), socket.gethostname(), "\n")
-
-            return hosts[int(input('Enter the host number you want to connect to: ')) - 1]
-
-        except IndexError as _:
-            print("No active devices")
-            return -1
 
     def send_message(self, socket=None):
         while True:
