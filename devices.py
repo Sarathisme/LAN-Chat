@@ -1,7 +1,11 @@
 import multiprocessing
-import os
 import socket
-import subprocess
+
+import nmap
+
+from config import PORT
+
+nm = nmap.PortScanner()
 
 
 class Mapper:
@@ -14,20 +18,18 @@ class Mapper:
 
     @staticmethod
     def ping(job_q, results_q):
-        dev_null = open(os.devnull, 'w')
         while True:
 
             ip = job_q.get()
-
             if ip is None:
                 break
 
             try:
-                output = subprocess.check_output(['nmap', '-p', '100', '127.0.0.1']).decode()
-                if output.count('open') == 1:
+                output = nm.scan(ip, str(PORT))['scan'][ip]['tcp'][PORT]['state']
+                if output == 'filtered' or output == 'open':
                     results_q.put(ip)
-            except:
-                pass
+            except Exception as e:
+                print(e)
 
     @staticmethod
     def get_my_ip():
